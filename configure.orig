@@ -233,13 +233,12 @@ sunos()     { issystem "SunOS"; }
 wine()      { issystem "Wine"; }
 win32()     { cygwin || mingw32 || wine; }
 msvc()      { test "$cc_vendor" = "msvc"; }
-haiku()      { issystem "Haiku"; }
 
 # arch test boolean functions
 # x86/x86pc is used by QNX
 x86_32() {
   case "$host_arch" in
-    i[3-9]86|x86|x86pc|k5|k6|k6-2|k6-3|pentium*|athlon*|i586-i686|BePC) return 0 ;;
+    i[3-9]86|x86|x86pc|k5|k6|k6-2|k6-3|pentium*|athlon*|i586-i686) return 0 ;;
     *) return 1 ;;
   esac
 }
@@ -485,7 +484,6 @@ Video output:
   --enable-vesa            enable VESA video output [autodetect]
   --enable-svga            enable SVGAlib video output [autodetect]
   --enable-sdl             enable SDL video output [autodetect]
-  --enable-haiku           enable Haiku video and audio output [autodetect]
   --enable-kva             enable KVA video output [autodetect]
   --enable-aa              enable AAlib video output [autodetect]
   --enable-caca            enable CACA  video output [autodetect]
@@ -702,7 +700,6 @@ _xv=auto
 _vda=auto
 _vdpau=auto
 _sdl=auto
-_haiku=auto
 _kva=auto
 _direct3d=auto
 _directx=auto
@@ -1053,8 +1050,6 @@ for ac_option do
   --disable-vdpau)      _vdpau=no       ;;
   --enable-sdl)         _sdl=yes        ;;
   --disable-sdl)        _sdl=no         ;;
-  --enable-haiku)       _haiku=yes      ;;
-  --disable-haiku)      _haiku=no       ;;
   --enable-kva)         _kva=yes        ;;
   --disable-kva)        _kva=no         ;;
   --enable-direct3d)    _direct3d=yes   ;;
@@ -1783,7 +1778,7 @@ else
       cc_name=$cc_name_tmp
       echocheck "$_cc version"
       cc_vendor=gnu
-      cc_version=$( ( $_cc -dumpversion | sed -e 's/-nb[0-9]//' ) 2>&1 )
+      cc_version=$($_cc -dumpversion 2>&1)
       case $cc_version in
         2.96*)
           cc_fail=yes
@@ -1900,7 +1895,6 @@ else # if test -z "$_target"
       amigaos) system_name=AmigaOS ;;
       mingw32*) system_name=MINGW32 ;;
       wine) system_name=Wine ;;
-      haiku) system_name=Haiku ;;
     esac
   done
   # We need to convert underscores so that values like k6-2 and pentium-mmx can be passed
@@ -1912,11 +1906,6 @@ fi
 
 _timer=timer-linux.c
 _getch=getch2.c
-
-if haiku ; then
-  extra_ldflags="$extra_ldflags -lbe -lmedia -lsupc++"
-  extra_cflags="-fno-pic $extra_cflags"
-fi
 
 if darwin; then
   extra_cflags="-mdynamic-no-pic $extra_cflags"
@@ -6109,29 +6098,6 @@ fi
 echores "$_v4l2"
 
 
-echocheck "Haiku"
-if test "$_haiku" = auto || test "$_haiku" = yes ; then
-  cat > $TMPC << EOF
-int main(void) {
-#ifdef __HAIKU__
-  return 0;
-#endif
-}
-EOF
-   _haiku=no
-   cc_check && _haiku=yes
-fi
-if test "$_haiku" = yes ; then
-  def_haiku='#define CONFIG_HAIKU 1'
-  vomodules="haiku $vomodules"
-  aomodules="haiku $aomodules"
-else
-  def_haiku='#undef CONFIG_HAIKU'
-  novomodules="haiku $novomodules"
-  noaomodules="haiku $noaomodules"
-fi
-echores "$_haiku"
-
 
 #########
 # AUDIO #
@@ -8347,7 +8313,7 @@ fi
 # (FIXME: 'echocheck "dynamic linking"' above and modify here accordingly)
 ld_dl_dynamic=''
 freebsd || netbsd || openbsd || dragonfly || bsdos && ld_dl_dynamic='-rdynamic'
-if test "$_real" = yes || test "$_xanim" = yes && ! win32 && ! qnx && ! darwin && ! os2 && ! sunos && ! haiku; then
+if test "$_real" = yes || test "$_xanim" = yes && ! win32 && ! qnx && ! darwin && ! os2 && ! sunos; then
   ld_dl_dynamic='-rdynamic'
 fi
 
@@ -8850,7 +8816,6 @@ RADIO_CAPTURE=$_radio_capture
 REAL_CODECS = $_real
 S3FB = $_s3fb
 SDL = $_sdl
-HAIKU = $_haiku
 SDL_IMAGE = $sdl_image
 SPEEX = $_speex
 STREAM_CACHE = $_stream_cache
@@ -9460,7 +9425,6 @@ $def_quartz
 $def_s3fb
 $def_sdl
 $def_sdl_sdl_h
-$def_haiku
 $def_svga
 $def_tdfxfb
 $def_tdfxvid

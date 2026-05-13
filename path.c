@@ -42,6 +42,11 @@
 #include <sys/cygwin.h>
 #endif
 
+#ifdef __HAIKU__
+#include <FindDirectory.h>
+#include <fs_info.h>
+#endif
+
 #include "osdep/osdep.h"
 
 char *get_path(const char *filename){
@@ -51,6 +56,13 @@ char *get_path(const char *filename){
 	char *buff;
 #ifdef __MINGW32__
 	const char *config_dir = "/mplayer";
+#elif defined(__HAIKU__)
+	dev_t volume = dev_for_path("/boot");
+	char buffer[B_PATH_NAME_LENGTH+B_FILE_NAME_LENGTH];
+	status_t result;
+	result = find_directory(B_USER_SETTINGS_DIRECTORY,volume,false,buffer,sizeof(buffer));
+	strcat(buffer,"/mplayer");
+	const char *config_dir = &buffer;
 #else
 	const char *config_dir = "/.mplayer";
 #endif
@@ -94,6 +106,12 @@ char *get_path(const char *filename){
 		else config_dir++;
 #endif
 	}
+#ifdef __HAIKU__
+	// As the home directory path is already on the
+	// find_directory call above, we empty the homedir
+	// variable
+	homedir = "";
+#endif
 	len = strlen(homedir) + strlen(config_dir) + 1;
 	if (filename == NULL) {
 		if ((buff = malloc(len)) == NULL)

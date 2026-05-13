@@ -108,6 +108,7 @@ extern const vo_functions_t video_out_gl_tiled;
 extern const vo_functions_t video_out_matrixview;
 extern const vo_functions_t video_out_dga;
 extern const vo_functions_t video_out_sdl;
+extern const vo_functions_t video_out_haiku;
 extern const vo_functions_t video_out_3dfx;
 extern const vo_functions_t video_out_tdfxfb;
 extern const vo_functions_t video_out_s3fb;
@@ -213,6 +214,9 @@ const vo_functions_t* const video_out_drivers[] =
 #endif
 #ifdef CONFIG_SDL
         &video_out_sdl,
+#endif
+#ifdef CONFIG_HAIKU
+        &video_out_haiku,
 #endif
 #ifdef CONFIG_GL
         &video_out_gl,

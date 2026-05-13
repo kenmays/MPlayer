@@ -43,6 +43,7 @@ extern const ao_functions_t audio_out_alsa;
 extern const ao_functions_t audio_out_sndio;
 extern const ao_functions_t audio_out_nas;
 extern const ao_functions_t audio_out_sdl;
+extern const ao_functions_t audio_out_haiku;
 extern const ao_functions_t audio_out_sun;
 extern const ao_functions_t audio_out_sgi;
 extern const ao_functions_t audio_out_win32;
@@ -106,6 +107,12 @@ const ao_functions_t* const audio_out_drivers[] =
 #endif
 #ifdef CONFIG_SDL
         &audio_out_sdl,
+#endif
+#ifdef CONFIG_HAIKU
+        &audio_out_haiku,
+#endif
+#ifdef CONFIG_HAIKU
+        &audio_out_haiku,
 #endif
 #ifdef CONFIG_OPENAL
         &audio_out_openal,

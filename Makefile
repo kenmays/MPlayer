@@ -546,6 +546,9 @@ SRCS_MPLAYER-$(S3FB)          += libvo/vo_s3fb.c
 SRCS_MPLAYER-$(SDL)           += libao2/ao_sdl.c                        \
                                  libvo/vo_sdl.c                         \
                                  libvo/sdl_common.c
+SRCS_MPLAYER-$(HAIKU)         += libao2/ao_haiku.cpp                    \
+                                 libvo/vo_haiku.cpp                     \
+                                 libvo/haiku_common.cpp
 SRCS_MPLAYER-$(SGIAUDIO)      += libao2/ao_sgi.c
 SRCS_MPLAYER-$(SNDIO)         += libao2/ao_sndio.c
 SRCS_MPLAYER-$(SUNAUDIO)      += libao2/ao_sun.c

@@ -18,7 +18,7 @@
 
 #include "config.h"
 
-#include <libsmbclient.h>
+#include <samba-4.0/libsmbclient.h>
 #include <unistd.h>
 
 #include "mp_msg.h"
